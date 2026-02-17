@@ -1,4 +1,4 @@
-name: Deploy FastAPI
+name: Deploy FastAPI Docker
 
 on:
   push:
@@ -10,20 +10,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy to Server
+      - name: SSH & Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}  # root
+          username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            echo "Deploying FastAPI app..."
             cd /root/QuestDB/fastapi-private-chat
-            git reset --hard
-            git pull origin main
-            source .venv/bin/activate
-            pip install --upgrade pip
-            pip install -r requirements.txt
+            docker-compose build
             sudo systemctl restart fastapi
-            echo "Deployment complete!"
