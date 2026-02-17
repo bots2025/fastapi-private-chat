@@ -17,8 +17,17 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/fastapi-private-chat
+            # Go to project directory
+            cd /root/QuestDB/fastapi-private-chat
+            
+            # Pull latest code
             git pull origin main
-            source venv/bin/activate
+
+            # Activate virtual environment
+            source .venv/bin/activate
+
+            # Install/update dependencies
             pip install -r requirements.txt
+
+            # Restart FastAPI service
             sudo systemctl restart fastapi
